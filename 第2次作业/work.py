@@ -48,7 +48,7 @@ class ExamSystem:
 
     def random_roll_call(self, count): #随机点名功能，输入要点名的学生数量，返回随机选中的学生列表
         if count <= 0: #输入验证，确保点名数量为正整数
-            raise ValueError("请输入大于 0 的整数。")
+            raise ValueError("请输入大于 0 的整数。") #返回错误提示
         if count > len(self.students): #输入验证，确保点名数量不超过学生总数
             raise ValueError(f"输入数量超过学生总数（{len(self.students)}），请重新输入。")
         return random.sample(list(self.students.values()), count) #随机选择指定数量的学生
@@ -134,12 +134,20 @@ def main():
         except KeyError:
             print(f"未找到学号为 {student_id} 的学生，请重新输入。")
 
-    try:
-        count = int(input("请输入随机点名学生数量：").strip())
-        selected_students = system.random_roll_call(count) #随机点名，如果输入无效则抛出异常
-    except ValueError as error:
-        print(error)
-        return
+    while True:
+        while True:  # 先循环校验输入是否为整数
+            count_text = input("请输入随机点名学生数量：").strip()
+            try:
+                count = int(count_text)
+                break
+            except ValueError:
+                print("请输入整数。")
+
+        try:  # 再循环校验整数是否符合随机点名要求
+            selected_students = system.random_roll_call(count)
+            break
+        except ValueError as error:
+            print(error)
 
     print("\n随机点名结果：")
     for i, student in enumerate(selected_students, start=1):
